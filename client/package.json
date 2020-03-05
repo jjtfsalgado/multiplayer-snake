@@ -4,9 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server --host 0.0.0.0"
   },
   "dependencies": {
+    "@microsoft/signalr": "^3.1.2",
     "webpack-cli": "^3.3.11"
   },
   "devDependencies": {

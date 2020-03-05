@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using WebSocketManager;
 
 namespace MultiPlayerSnake
 {
@@ -23,13 +22,11 @@ namespace MultiPlayerSnake
 
         public IConfiguration Configuration { get; }
 
-        public static IServiceProvider ServiceProvider { get; set; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddWebSocketManager();
+            services.AddSingleton<GameManager>();
+            services.AddSignalR();
             services.AddControllers();
         }
 
@@ -42,22 +39,25 @@ namespace MultiPlayerSnake
             }
 
             app.UseWebSockets();
-            app.MapWebSocketManager("/server", serviceProvider.GetService<SnakeHandler>());
+            //app.MapWebSocketManager("/server", serviceProvider.GetService<SnakeHandler>());
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
+            app.UseCors(builder =>
             {
-                endpoints.MapControllers();
+                builder.WithOrigins("http://192.168.5.45:8080")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowCredentials();
             });
 
-            ServiceProvider = serviceProvider;
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<SnakeHub>("/snakeHub");
+            });
 
-            GameManager.Instance.Initialize();
+            app.UseAuthorization();
         }
     }
 }

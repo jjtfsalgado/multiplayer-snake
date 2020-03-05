@@ -5,7 +5,7 @@ module.exports = {
     // mode: "production",
     entry: './src/index.ts',
     // Enable sourcemaps for debugging webpack's output.
-    devtool: "source-map",
+    // devtool: "source-map",
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'index.js',
@@ -34,6 +34,14 @@ module.exports = {
     },
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
+        proxy: {
+            '/snakeHub': {
+                target: 'http://localhost:5000/snakeHub',
+                secure: false,
+                // changeOrigin: true,
+                pathRewrite: {'^/snakeHub' : ''}
+            }
+        },
         port: 8080
     },
 };
