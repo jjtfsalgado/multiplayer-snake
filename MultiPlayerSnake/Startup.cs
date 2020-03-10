@@ -52,12 +52,11 @@ namespace MultiPlayerSnake
             });
 
             app.UseRouting();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<SnakeHub>("/snakeHub");
             });
-
-            app.UseAuthorization();
         }
     }
 }
