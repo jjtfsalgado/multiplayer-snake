@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -21,8 +22,11 @@ namespace MultiPlayerSnake
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder
-                        .UseUrls("http://*:5000")
-                        .UseStartup<Startup>();
+                        .UseStartup<Startup>()
+                        .UseKestrel(options =>
+                        {
+                            options.ListenAnyIP(Int32.Parse(System.Environment.GetEnvironmentVariable("PORT") == null ? "5000" : System.Environment.GetEnvironmentVariable("PORT")));
+                        });
                 });
     }
 }

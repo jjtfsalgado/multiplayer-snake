@@ -1,17 +1,10 @@
 import * as signalR from "@microsoft/signalr";
-import {HubConnection, HubConnectionState} from "@microsoft/signalr";
+import {HubConnection} from "@microsoft/signalr";
 import {canvas, ctx, renderPixel, Snake} from "./snake";
-
-function randomPixel(limit: number) {
-    return Math.floor(Math.random() * limit) + 1
-}
-
-function Food() {
-    this.x = randomPixel(canvas.width);
-    this.y = randomPixel(canvas.height);
-}
+import {_DEV_} from "./index";
 
 let name = localStorage.getItem("snakeName");
+const BASE_URL = _DEV_ ? "http://localhost:5000" : "https://blooming-hollows-30886.herokuapp.com";
 
 if(!name){
     name = prompt("Hey!!!! Name pleaseee?");
@@ -27,7 +20,7 @@ export class Game {
     connection: HubConnection;
 
     constructor() {
-        this.connection = new signalR.HubConnectionBuilder().withUrl("http://192.168.5.45:5000/snakeHub").build();
+        this.connection = new signalR.HubConnectionBuilder().withUrl(`${BASE_URL}/snakeHub`).build();
         this.connection.on("Snakes", this.onSnakes);
         window.addEventListener("close", this.onWindowClose);
         window.addEventListener("keydown", this.onKeyDown);
@@ -88,16 +81,6 @@ export class Game {
         }
     };
 
-
-    // addFood = (shift? : boolean) => {
-    //     this.food = this.food || [];
-    //     if(shift){
-    //         this.food.shift()
-    //     }
-    //
-    //     this.food.push(new Food());
-    // };
-
     onSnakes = (snakes, food) => {
         const s: Array<any> = JSON.parse(snakes);
         this.food = food && JSON.parse(food) || [];
@@ -132,11 +115,6 @@ export class Game {
     };
 
     renderFrame = () => {
-        //todo in case of error stop the rendering
-        // if(this.connection.state as HubConnectionState === "Disconnected"){
-        //     return
-        // }
-
         ctx.clearRect(0 ,0 , canvas.width, canvas.height);
 
         this.snakes.forEach(i => {
@@ -144,7 +122,6 @@ export class Game {
         });
 
         this.food.forEach(i => renderPixel(i.x, i.y, 5, 5, "white"));
-        // requestAnimationFrame(this.renderFrame)
     };
 }
 

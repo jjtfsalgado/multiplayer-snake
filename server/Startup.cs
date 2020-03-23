@@ -42,10 +42,12 @@ namespace MultiPlayerSnake
             //app.MapWebSocketManager("/server", serviceProvider.GetService<SnakeHandler>());
 
             //app.UseHttpsRedirection();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseCors(builder =>
             {
-                builder.WithOrigins("http://192.168.5.45:8080")
+                builder.SetIsOriginAllowed(_ => true)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();

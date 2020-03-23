@@ -34,14 +34,15 @@ module.exports = {
     },
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
-        proxy: {
-            '/snakeHub': {
-                target: 'http://localhost:5000/snakeHub',
-                secure: false,
-                // changeOrigin: true,
-                pathRewrite: {'^/snakeHub' : ''}
-            }
-        },
+        // proxy: {
+        //     '/snakeHub': {
+        //         target: 'http://0.0.0.0:5000',
+        //         changeOrigin: true,
+        //         logLevel: "debug"
+        //         // secure: false,
+        //         // pathRewrite: {'^/snakeHub' : ''}
+        //     }
+        // },
         port: 8080
     },
 };

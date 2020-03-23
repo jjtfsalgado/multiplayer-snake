@@ -172,7 +172,7 @@ namespace MultiPlayerSnake
                     }
                 }
 
-                foreach (Snake sna in Snakes.Values)
+                foreach (Snake sna in Snakes.Values.ToList())
                 {
                     if (sna.id != snake.id && sna.trail.Find(i => (i.x == head.x && i.y == head.y)) != null)
                     {
