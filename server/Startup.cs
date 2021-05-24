@@ -45,6 +45,8 @@ namespace MultiPlayerSnake
                 });
             }
             
+            
+            
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
