@@ -11,11 +11,11 @@ namespace MultiPlayerSnake
 {
     public class SnakeHub: Hub
     {
-        private GameManager _gameManager;
+        private Game _game;
 
-        public SnakeHub(GameManager gameManager)
+        public SnakeHub(Game game)
         {
-            _gameManager = gameManager;
+            _game = game;
         }
 
         public Task ChangeDirection(string snakeData)
@@ -24,7 +24,7 @@ namespace MultiPlayerSnake
 
             var snake = JsonConvert.DeserializeObject<Snake>(snakeData);
             
-            _gameManager.ChangeDirection(snake);
+            _game.ChangeDirection(snake);
 
             return Clients.Client(snake.id).SendAsync("ReceiveMessage", JsonConvert.SerializeObject(snake));
         }
@@ -34,7 +34,7 @@ namespace MultiPlayerSnake
             var snake = JsonConvert.DeserializeObject<Snake>(serializedSnake);
             var canvas = JsonConvert.DeserializeObject<Canvas>(serializedCanvas);
 
-            _gameManager.Add(snake, canvas);
+            _game.Add(snake, canvas);
 
             return Clients.Client(snake.id).SendAsync("ReceiveMessage", snake.id);
         }
@@ -64,7 +64,7 @@ namespace MultiPlayerSnake
         {
             var socketId = Context.ConnectionId;
 
-            _gameManager.Remove(socketId);
+            _game.Remove(socketId);
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, "SignalR Users");
             await base.OnDisconnectedAsync(exception);
