@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 
 namespace MultiPlayerSnake
@@ -34,7 +36,15 @@ namespace MultiPlayerSnake
 
             app.UseWebSockets();
             
-            //app.UseHttpsRedirection();
+            if (env.IsProduction())
+            {
+                app.UseFileServer(new FileServerOptions {
+                    FileProvider = new PhysicalFileProvider(
+                        Path.Combine(env.ContentRootPath, "client")),
+                    EnableDefaultFiles = true
+                });
+            }
+            
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
